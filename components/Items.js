@@ -1,35 +1,59 @@
-import React, { Component } from "react";
-import {Query} from 'react-apollo'
-import gql from 'graphql-tag';
-
+import React, { Component } from 'react'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
+import styled from 'styled-components'
+import Item from './Item';
 const ALL_ITEMS_QUERY = gql`
-    query ALL_ITEMS_QUERY {
-        items{
-            id
-            title
-            price
-            description
-            image
-            largeImage
-        }
+  query ALL_ITEMS_QUERY {
+    items {
+      id
+      title
+      price
+      description
+      image
+      largeImage
     }
+  }
+`
+
+const Center = styled.div`
+  text-align: center;
+`
+
+const ItemsList = styled.div`
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   grid-gap: 60px;
+   max-width: ${props => props.theme.maxWidth};  
+   margin: 0 auto
 `;
 
 
 class Items extends Component {
-    render() {
-        return (
-            <div>
-                <p>Items</p>
-                // recommended way to get data is to use render props function with Query Component
-                <Query query={ALL_ITEMS_QUERY}>
-                    {(payload) => {
-                        console.log(payload);
-                        return <p>data</p>
-                    } }
-                </Query>
-            </div>
-        );
-    }
+  render () {
+    return (
+      <Center>
+        <p>Items</p>
+        {/* recommended way to get data is to use
+                render props function with Query Component
+                has a payload containing: error, data, loading
+                */}
+        <Query query={ALL_ITEMS_QUERY}>
+          {({ loading, data, error }) => {
+            if (loading) return <p>Loading...</p>
+            if (error) return <p>Error{error.message}</p>
+            {/* return <p>{data.items.length} items</p> */}
+            return <ItemsList>
+                {/* {data.items.map(item => <p key={item.id}>
+                    {item.title}
+                </p>)} */}
+                   {data.items.map(item => <Item item={item}/>
+                )}
+            </ItemsList>
+          }}
+        </Query>
+      </Center>
+    )
+  }
 }
-export default Items;
+export default Items
