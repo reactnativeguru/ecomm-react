@@ -16,13 +16,13 @@ class Item extends Component {
     render() {
         const {item} = this.props;
         return (
-            <ItemStyles>
+            <ItemStyles >
               {item.image && <img src={item.image}/> }
                     <Link href={{
                         pathname:'/item',
                         query: {id: item.id}
                     }}>
-                        <a>{item.title}</a>
+                        <a key={item.id}>{item.title}</a>
                     </Link>
                 <PriceTag>{formatMoney(item.price)}</PriceTag>
                 <p>{item.description}</p>
